@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT-Конкурс 2026 - Регистрация участника</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #4dd15f 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        header h1 {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+        
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .step {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+        
+        .step.active {
+            background: #28a745;
+            box-shadow: 0 0 10px rgba(40,167,69,0.5);
+        }
+        
+        .step.completed {
+            background: #6c757d;
+        }
+        
+        form {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        section h2 {
+            color: #333;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        input:valid {
+            border-color: #28a745;
+        }
+        
+        input:invalid:not(:placeholder-shown) {
+            border-color: #dc3545;
+        }
+        
+        textarea:valid {
+            border-color: #28a745;
+        }
+        
+        textarea:invalid:not(:placeholder-shown) {
+            border-color: #dc3545;
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .radio-group label {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: normal;
+        }
+        
+        .radio-group input {
+            width: auto;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-group label {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: normal;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+        
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+        
+        .btn-next {
+            background: #007bff;
+            color: white;
+        }
+        
+        .btn-back {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-submit {
+            background: #28a745;
+            color: white;
+            font-size: 18px;
+            padding: 12px 40px;
+        }
+        
+        fieldset[disabled] {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        fieldset[disabled] input,
+        fieldset[disabled] textarea {
+            background: #e9ecef;
+            border-color: #ced4da;
+        }
+        
+        .char-counter {
+            font-size: 12px;
+            color: #666;
+            text-align: right;
+            margin-top: 5px;
+        }
+        
+        hr {
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 600px) {
+            form { padding: 20px; }
+            .buttons { flex-direction: column; }
+            button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <header>
+            <h1>IT-Конкурс 2026 - Регистрация участника</h1>
+            <div class="steps">
+                <div class="step active" data-step="1">1</div>
+                <div class="step" data-step="2">2</div>
+                <div class="step" data-step="3">3</div>
+                <div class="step" data-step="4">4</div>
+            </div>
+        </header>
+        
+        <form id="registrationForm" action="#" method="post" enctype="multipart/form-data" novalidate>
+            <!-- Шаг 1 - Личные данные -->
+            <section id="step1">
+                <h2>Шаг 1 из 4 - Личные данные</h2>
+                
+                <div class="form-group">
+                    <label for="surname">Фамилия *</label>
+                    <input type="text" id="surname" name="surname" required minlength="2" pattern="[А-Яа-яЁё\s-]+" title="Только кириллица">
+                </div>
+                
+                <div class="form-group">
+                    <label for="name">Имя *</label>
+                    <input type="text" id="name" name="name" required minlength="2" pattern="[А-Яа-яЁё\s-]+" title="Только кириллица">
+                </div>
+                
+                <div class="form-group">
+                    <label for="birthdate">Дата рождения *</label>
+                    <input type="date" id="birthdate" name="birthdate" required max="2010-03-25">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Телефон *</label>
+                    <input type="tel" id="phone" name="phone" required pattern="[+]?[0-9\\s\\-()]*" placeholder="+71234567890" title="Формат: +7XXXXXXXXXX (10 цифр после +7)">
+                </div>
+                
+                <div class="form-group">
+                    <label for="city">Город</label>
+                    <input list="cities" id="city" name="city">
+                    <datalist id="cities">
+                        <option value="Москва">
+                        <option value="Санкт-Петербург">
+                        <option value="Новосибирск">
+                        <option value="Екатеринбург">
+                        <option value="Казань">
+                        <option value="Нижний Новгород">
+                        <option value="Челябинск">
+                        <option value="Самара">
+                    </datalist>
+                </div>
+                
+                <fieldset>
+                    <legend>Пол</legend>
+                    <div class="radio-group">
+                        <label><input type="radio" name="gender" value="male"> Мужской</label>
+                        <label><input type="radio" name="gender" value="female"> Женский</label>
+                        <label><input type="radio" name="gender" value="not_specified" checked> Не указывать</label>
+                    </div>
+                </fieldset>
+                
+                <div class="buttons">
+                    <div></div>
+                    <button type="button" class="btn-next" onclick="nextStep(1, 2)">Далее →</button>
+                </div>
+            </section>
+            
+            <!-- Шаг 2 - Образование -->
+            <section id="step2" hidden>
+                <h2>Шаг 2 из 4 - Образование</h2>
+                
+                <div class="form-group">
+                    <label for="university">Учебное заведение *</label>
+                    <textarea id="university" name="university" rows="2" required maxlength="200" placeholder="Название университета/колледжа"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="specialty">Специальность *</label>
+                    <input type="text" id="specialty" name="specialty" required placeholder="Информационные системы">
+                </div>
+                
+                <div class="form-group">
+                    <label for="course">Курс *</label>
+                    <select id="course" name="course" required>
+                        <option value="">-- Выберите курс --</option>
+                        <option value="1">1 курс</option>
+                        <option value="2">2 курс</option>
+                        <option value="3">3 курс</option>
+                        <option value="4">4 курс</option>
+                        <option value="5">5 курс</option>
+                        <option value="6">6 курс</option>
+                        <option value="postgrad">Аспирантура</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="gpa">Средний балл (GPA)</label>
+                    <input type="number" id="gpa" name="gpa" min="2.0" max="5.0" step="0.01" placeholder="2.0 - 5.0">
+                </div>
+                
+                <div class="form-group">
+                    <label>Дополнительное образование</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="additional_education" value="courses"> Онлайн-курсы</label>
+                        <label><input type="checkbox" name="additional_education" value="bootcamp"> Буткемп</label>
+                        <label><input type="checkbox" name="additional_education" value="self"> Самообучение</label>
+                        <label><input type="checkbox" name="additional_education" value="internship"> Стажировка</label>
+                        <label><input type="checkbox" name="additional_education" value="none"> Нет</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="github">Ссылка на GitHub</label>
+                    <input type="url" id="github" name="github" placeholder="https://github.com/username">
+                </div>
+                
+                <div class="buttons">
+                    <button type="button" class="btn-back" onclick="nextStep(2, 1)">← Назад</button>
+                    <button type="button" class="btn-next" onclick="nextStep(2, 3)">Далее →</button>
+                </div>
+            </section>
+            
+            <!-- Шаг 3 - Информация о проекте -->
+            <section id="step3" hidden>
+                <h2>Шаг 3 из 4 - Ваш проект</h2>
+                
+                <div class="form-group">
+                    <label for="project-name">Название проекта *</label>
+                    <input type="text" id="project-name" name="project-name" required maxlength="100">
+                </div>
+                
+                <div class="form-group">
+                    <label for="category">Категория *</label>
+                    <select id="category" name="category" required>
+                        <option value="">-- Выберите категорию --</option>
+                        <option value="web">Web-разработка</option>
+                        <option value="mobile">Мобильные приложения</option>
+                        <option value="ai">AI/ML</option>
+                        <option value="security">Кибербезопасность</option>
+                        <option value="iot">IoT</option>
+                        <option value="games">Игры</option>
+                        <option value="other">Другое</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Описание проекта *</label>
+                    <textarea id="description" name="description" rows="6" required minlength="100" maxlength="1000" placeholder="Опишите ваш проект..."></textarea>
+                    <div class="char-counter"><span id="desc-counter">0</span>/1000 символов (мин. 100)</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="technologies">Используемые технологии</label>
+                    <textarea id="technologies" name="technologies" rows="3" placeholder="Python, TensorFlow, FastAPI..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="demo-link">Ссылка на демо</label>
+                    <input type="url" id="demo-link" name="demo-link" placeholder="https://...">
+                </div>
+                
+                <div class="form-group">
+                    <label for="repo-link">Ссылка на репозиторий</label>
+                    <input type="url" id="repo-link" name="repo-link" placeholder="https://github.com/...">
+                </div>
+                
+                <div class="form-group">
+                    <label for="team-size">Количество участников</label>
+                    <input type="number" id="team-size" name="team-size" min="1" max="5" value="1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="team-members">ФИО участников</label>
+                    <textarea id="team-members" name="team-members" rows="3" placeholder="Перечислите всех участников команды"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="presentation">Презентация проекта (.pdf, .pptx, .docx)</label>
+                    <input type="file" id="presentation" name="presentation" accept=".pdf,.pptx,.docx">
+                </div>
+                
+                <div class="form-group">
+                    <label for="screenshots">Скриншоты (можно выбрать несколько)</label>
+                    <input type="file" id="screenshots" name="screenshots" accept="image/*" multiple>
+                </div>
+                
+                <div class="buttons">
+                    <button type="button" class="btn-back" onclick="nextStep(3, 2)">← Назад</button>
+                    <button type="button" class="btn-next" onclick="nextStep(3, 4)">Далее →</button>
+                </div>
+            </section>
+            
+            <!-- Шаг 4 - Подтверждение и отправка -->
+            <section id="step4" hidden>
+                <h2>Шаг 4 из 4 - Подтверждение</h2>
+                
+                <fieldset disabled>
+                    <legend>Ваши данные для проверки</legend>
+                    <div class="form-group">
+                        <label>ФИО:</label>
+                        <input type="text" id="summary-name" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="summary-email" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Название проекта:</label>
+                        <input type="text" id="summary-project" readonly>
+                    </div>
+                    <p><small>Поле disabled используется, чтобы данные нельзя было редактировать, но при этом они остаются видимыми. При отправке формы данные из disabled-полей НЕ отправляются на сервер, поэтому здесь они только для предварительного просмотра. Настоящие данные отправляются из основных полей.</small></p>
+                </fieldset>
+                
+                <!-- Скрытые поля -->
+                <input type="hidden" name="submitted_at" id="submitted_at">
+                <input type="hidden" name="source_page" value="task10.html">
+                
+                <hr>
+                
+                <div class="form-group">
+                    <label><input type="checkbox" name="privacy" required> Я согласен с Политикой конфиденциальности *</label>
+                </div>
+                
+                <div class="form-group">
+                    <label><input type="checkbox" name="rules" required> Я ознакомлен с Положением о конкурсе *</label>
+                </div>
+                
+                <div class="form-group">
+                    <label><input type="checkbox" name="newsletter"> Получать уведомления на email</label>
+                </div>
+                
+                <div class="buttons">
+                    <button type="button" class="btn-back" onclick="nextStep(4, 3)">← Назад</button>
+                    <button type="submit" class="btn-submit">Отправить заявку</button>
+                </div>
+            </section>
+        </form>
+    </main>
+    
+    <script>
+        // Получение значений для сводки
+        function updateSummary() {
+            const surname = document.getElementById('surname').value;
+            const name = document.getElementById('name').value;
+            const summaryName = document.getElementById('summary-name');
+            if (summaryName) summaryName.value = surname + ' ' + name;
+            
+            const email = document.getElementById('email').value;
+            const summaryEmail = document.getElementById('summary-email');
+            if (summaryEmail) summaryEmail.value = email;
+            
+            const projectName = document.getElementById('project-name').value;
+            const summaryProject = document.getElementById('summary-project');
+            if (summaryProject) summaryProject.value = projectName;
+        }
+        
+        // Функция показа шага
+        function showStep(step) {
+            for (let i = 1; i <= 4; i++) {
+                const section = document.getElementById(`step${i}`);
+                if (section) section.hidden = (i !== step);
+            }
+            
+            const steps = document.querySelectorAll('.step');
+            steps.forEach((el, idx) => {
+                const stepNum = idx + 1;
+                el.classList.remove('active', 'completed');
+                if (stepNum === step) {
+                    el.classList.add('active');
+                } else if (stepNum < step) {
+                    el.classList.add('completed');
+                }
+            });
+        }
+        
+        // Проверка обязательных полей текущего шага
+        function validateCurrentStep(stepNumber) {
+            const currentSection = document.getElementById(`step${stepNumber}`);
+            const requiredFields = currentSection.querySelectorAll('[required]');
+            let isValid = true;
+            
+            for (let field of requiredFields) {
+                if (!field.value.trim()) {
+                    field.reportValidity();
+                    isValid = false;
+                    break;
+                }
+                // Дополнительная проверка для textarea с minlength
+                if (field.tagName === 'TEXTAREA' && field.hasAttribute('minlength')) {
+                    const minLength = parseInt(field.getAttribute('minlength'));
+                    if (field.value.length < minLength) {
+                        field.setCustomValidity(`Минимальная длина ${minLength} символов`);
+                        field.reportValidity();
+                        isValid = false;
+                        break;
+                    } else {
+                        field.setCustomValidity('');
+                    }
+                }
+                // Для обычных полей
+                if (field.type !== 'textarea' && field.hasAttribute('minlength')) {
+                    const minLength = parseInt(field.getAttribute('minlength'));
+                    if (field.value.length < minLength) {
+                        field.setCustomValidity(`Минимальная длина ${minLength} символов`);
+                        field.reportValidity();
+                        isValid = false;
+                        break;
+                    } else {
+                        field.setCustomValidity('');
+                    }
+                }
+            }
+            return isValid;
+        }
+        
+        // Переключение между шагами
+        function nextStep(current, next) {
+            if (next > current) {
+                if (!validateCurrentStep(current)) {
+                    return;
+                }
+            }
+            
+            if (next === 4) {
+                document.getElementById('submitted_at').value = new Date().toISOString();
+                updateSummary();
+            }
+            
+            showStep(next);
+            
+            if (next === 4) {
+                updateSummary();
+            }
+        }
+        
+        // Счетчик символов для описания проекта
+        const descriptionTextarea = document.getElementById('description');
+        const descCounter = document.getElementById('desc-counter');
+        if (descriptionTextarea) {
+            descriptionTextarea.oninput = function() {
+                descCounter.textContent = this.value.length;
+            }
+        }
+        
+        // Инициализация
+        showStep(1);
+        
+        // Обработка отправки формы
+        document.getElementById('registrationForm').onsubmit = function(e) {
+            if (validateCurrentStep(4)) {
+                alert('Заявка успешно отправлена! Спасибо за регистрацию!');
+                return true;
+            }
+            e.preventDefault();
+            return false;
+        };
+    </script>
+</body>
+</html>
